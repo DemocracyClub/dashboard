@@ -11,6 +11,11 @@ def get_cvs_count
   x = JSON.parse(open(url).read).length
 end
 
+def get_meet_count
+  url = "http://meetyournextmp.com/numbers.json"
+  x = JSON.parse(open(url).read)
+end
+
 
 def update_all
   # Election Leaflets
@@ -21,6 +26,11 @@ def update_all
   # CVs
   csv_count = get_cvs_count
   send_event('total_cvs', { current: csv_count })
+
+  # Meet
+  meet_count = get_meet_count
+  send_event('total_meet_events', { current: meet_count['countEventsTotal'] })
+  send_event('meet_events_remaining', { current: meet_count['countEventsAfterNow'] })
 end
 
 update_all
