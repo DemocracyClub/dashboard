@@ -21,6 +21,11 @@ def get_ynmp_counts
   JSON.parse(open(url).read)
 end
 
+def get_mentions_counts
+  url = "https://www.electionmentions.com/statistics.json"
+  JSON.parse(open(url).read)
+end
+
 
 def update_all
   # Election Leaflets
@@ -40,6 +45,11 @@ def update_all
   # YNMP
   ynmp_counts = get_ynmp_counts
   send_event('total_2015_candidates', { current: ynmp_counts['candidates_2015'] })
+
+  # Mentions
+  mentions_counts = get_mentions_counts
+  send_event('mentions_total', { current: mentions_counts['candidates']['total_mentions'] })
+  send_event('last_week_mentions', { current: mentions_counts['candidates']['last_week_mentions'] })
 end
 
 update_all
