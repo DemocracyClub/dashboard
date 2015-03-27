@@ -8,12 +8,17 @@ end
 
 def get_cvs_count
   url = "http://cv.democracyclub.org.uk/cvs.json"
-  x = JSON.parse(open(url).read).length
+  JSON.parse(open(url).read).length
 end
 
 def get_meet_count
   url = "http://meetyournextmp.com/numbers.json"
-  x = JSON.parse(open(url).read)
+  JSON.parse(open(url).read)
+end
+
+def get_ynmp_counts
+  url = "https://yournextmp.com/numbers/?format=json"
+  JSON.parse(open(url).read)
 end
 
 
@@ -31,6 +36,10 @@ def update_all
   meet_count = get_meet_count
   send_event('total_meet_events', { current: meet_count['countEventsTotal'] })
   send_event('meet_events_remaining', { current: meet_count['countEventsAfterNow'] })
+
+  # YNMP
+  ynmp_counts = get_ynmp_counts
+  send_event('total_2015_candidates', { current: ynmp_counts['candidates_2015'] })
 end
 
 update_all
