@@ -22,8 +22,13 @@ def get_ynmp_counts
 end
 
 def get_mentions_counts
-  url = "https://www.electionmentions.com/statistics.json"
-  JSON.parse(open(url).read)
+  begin
+      url = "https://www.electionmentions.com/statistics.json"
+      res = JSON.parse(open(url).read)
+    rescue
+      res = {}
+  end
+  res
 end
 
 
@@ -48,8 +53,10 @@ def update_all
 
   # Mentions
   mentions_counts = get_mentions_counts
-  send_event('mentions_total', { current: mentions_counts['candidates']['total_mentions'] })
-  send_event('last_week_mentions', { current: mentions_counts['candidates']['last_week_mentions'] })
+  if not mentions_counts.empty?
+    send_event('mentions_total', { current: mentions_counts['candidates']['total_mentions'] })
+    send_event('last_week_mentions', { current: mentions_counts['candidates']['last_week_mentions'] })
+  end
 end
 
 update_all
